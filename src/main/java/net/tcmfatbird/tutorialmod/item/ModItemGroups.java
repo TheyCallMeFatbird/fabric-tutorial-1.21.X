@@ -19,6 +19,8 @@ public class ModItemGroups {
                         entries.add(ModItems.PINK_GARNET);
                         entries.add(ModItems.RAW_PINK_GARNET);
 
+                        entries.add(ModItems.THICKENED_INK);
+
                         entries.add(ModItems.CHISEL);
                     }).build());
 
