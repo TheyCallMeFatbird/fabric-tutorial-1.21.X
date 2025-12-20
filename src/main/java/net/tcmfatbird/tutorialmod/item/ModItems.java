@@ -8,6 +8,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.tcmfatbird.tutorialmod.TutorialMod;
 import net.tcmfatbird.tutorialmod.item.custom.ChiselItem;
+import net.tcmfatbird.tutorialmod.item.custom.ThickenedInkItem;
 
 public class ModItems {
     public static final Item PINK_GARNET = registerItem("pink_garnet", new Item(new Item.Settings()));
@@ -15,7 +16,11 @@ public class ModItems {
 
     public static final Item CHISEL = registerItem("chisel", new ChiselItem(new Item.Settings().maxDamage(32)));
 
-    public static final Item THICKENED_INK = registerItem("thickened_ink", new Item(new Item.Settings()));
+    public static final Item THICKENED_INK = registerItem("thickened_ink", new ThickenedInkItem(new Item.Settings()));
+
+    public static final Item CAULIFLOWER = registerItem("cauliflower", new Item(new Item.Settings().food(ModFoodComponents.CAULIFLOWER)));
+
+    public static final Item STARLIGHT_ASHES = registerItem("starlight_ashes", new Item(new Item.Settings()));
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, Identifier.of(TutorialMod.MOD_ID, name), item);
