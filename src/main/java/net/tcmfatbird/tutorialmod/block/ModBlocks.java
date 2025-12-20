@@ -21,7 +21,7 @@ public class ModBlocks {
                     .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
 
     public static final Block RAW_PINK_GARNET_BLOCK = registerBlock("raw_pink_garnet_block",
-            new Block(AbstractBlock.Settings.create().strength(3f).slipperiness(5)
+            new Block(AbstractBlock.Settings.create().strength(3f).slipperiness(8)
                     .requiresTool()));
 
     public static final Block PINK_GARNET_ORE = registerBlock("pink_garnet_ore",
