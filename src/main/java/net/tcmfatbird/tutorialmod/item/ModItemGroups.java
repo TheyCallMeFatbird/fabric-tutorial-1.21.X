@@ -21,6 +21,8 @@ public class ModItemGroups {
 
                         entries.add(ModItems.THICKENED_INK);
 
+                        entries.add(ModItems.RAINBOW_DYE);
+
                         entries.add(ModItems.CHISEL);
                         entries.add(ModItems.CAULIFLOWER);
 
