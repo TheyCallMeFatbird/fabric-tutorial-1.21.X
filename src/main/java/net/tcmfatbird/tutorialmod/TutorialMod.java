@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.tcmfatbird.tutorialmod.block.ModBlocks;
 import net.tcmfatbird.tutorialmod.command.CustomCommands;
 import net.tcmfatbird.tutorialmod.feature.BlockHighlightTracker;
+import net.tcmfatbird.tutorialmod.feature.ChatMentions;
+import net.tcmfatbird.tutorialmod.network.ClockTogglePacket;
 import net.tcmfatbird.tutorialmod.item.ModItemGroups;
 import net.tcmfatbird.tutorialmod.item.ModItems;
 import net.tcmfatbird.tutorialmod.network.BlockHighlightPacket;
@@ -24,7 +26,7 @@ public class TutorialMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        // Register the packet for server -> client
+        PayloadTypeRegistry.playS2C().register(ClockTogglePacket.ID, ClockTogglePacket.CODEC);
         PayloadTypeRegistry.playS2C().register(BlockHighlightPacket.ID, BlockHighlightPacket.CODEC);
 
         ModItemGroups.registerItemGroups();
@@ -37,6 +39,16 @@ public class TutorialMod implements ModInitializer {
         // --- CHAT HOOK ---
         ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
             String content = message.getContent().getString();
+
+            // --- CHAT MENTIONS ---
+            String mentionError = ChatMentions.processMentions(sender, content);
+            if (mentionError != null) {
+                // Cooldown hit — send error only to the sender, don't broadcast
+                sender.sendMessage(Text.literal(mentionError)
+                        .setStyle(net.minecraft.text.Style.EMPTY
+                                .withColor(net.minecraft.text.TextColor.fromRgb(0xFF4444))), false);
+                return false; // cancel the message entirely
+            }
 
             // --- BLOCK HIGHLIGHT CHECK ---
             BlockPos highlighted = BlockHighlightTracker.onChat(sender, content);

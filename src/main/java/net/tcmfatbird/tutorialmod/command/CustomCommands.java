@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -13,26 +13,91 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.tcmfatbird.tutorialmod.feature.ChatMentions;
+import net.tcmfatbird.tutorialmod.network.ClockTogglePacket;
+
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.mojang.brigadier.CommandDispatcher;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
 public class CustomCommands {
 
+    // Tracks per-player mention toggle state (default: on)
+    private static final Map<UUID, Boolean> mentionsEnabled = new ConcurrentHashMap<>();
+    // Tracks per-player clock toggle state (default: on)
+    private static final Map<UUID, Boolean> clockEnabled = new ConcurrentHashMap<>();
+
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            // Simple hello command
             registerHelloCommand(dispatcher);
-
-            // Command with arguments
             registerHealCommand(dispatcher);
-
-            // Command with player effects
             registerBoostCommand(dispatcher);
+            registerMentionCommand(dispatcher);
+            registerClockCommand(dispatcher);
         });
     }
 
-    /**
-     * Simple command: /hello
-     * Sends a greeting message to the player
-     */
+    // ─── PUBLIC HELPERS (used by ChatMentions) ───────────────────────────────
+
+    public static boolean areMentionsEnabledFor(ServerPlayerEntity player) {
+        return mentionsEnabled.getOrDefault(player.getUuid(), true);
+    }
+
+    public static boolean isClockEnabledFor(ServerPlayerEntity player) {
+        return clockEnabled.getOrDefault(player.getUuid(), true);
+    }
+
+    // ─── /mention on|off ──────────────────────────────────────────────────────
+
+    private static void registerMentionCommand(CommandDispatcher<ServerCommandSource> dispatcher) {
+        dispatcher.register(CommandManager.literal("mention")
+                .then(CommandManager.literal("on").executes(ctx -> setMentions(ctx, true)))
+                .then(CommandManager.literal("off").executes(ctx -> setMentions(ctx, false))));
+    }
+
+    private static int setMentions(CommandContext<ServerCommandSource> context, boolean enabled) {
+        try {
+            ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+            mentionsEnabled.put(player.getUuid(), enabled);
+            context.getSource().sendFeedback(
+                    () -> Text.literal("Mentions " + (enabled ? "enabled" : "disabled") + "."), false);
+            return 1;
+        } catch (Exception e) {
+            context.getSource().sendError(Text.literal("Only players can use this command!"));
+            return 0;
+        }
+    }
+
+    // ─── /clock on|off ────────────────────────────────────────────────────────
+
+    private static void registerClockCommand(CommandDispatcher<ServerCommandSource> dispatcher) {
+        dispatcher.register(CommandManager.literal("clock")
+                .then(CommandManager.literal("on").executes(ctx -> setClock(ctx, true)))
+                .then(CommandManager.literal("off").executes(ctx -> setClock(ctx, false))));
+    }
+
+    private static int setClock(CommandContext<ServerCommandSource> context, boolean enabled) {
+        try {
+            ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+            clockEnabled.put(player.getUuid(), enabled);
+
+            // Send the toggle state to the client so it can stop/start the clock display
+            ServerPlayNetworking.send(player, new ClockTogglePacket(enabled));
+
+            context.getSource().sendFeedback(
+                    () -> Text.literal("Clock " + (enabled ? "enabled" : "disabled") + "."), false);
+            return 1;
+        } catch (Exception e) {
+            context.getSource().sendError(Text.literal("Only players can use this command!"));
+            return 0;
+        }
+    }
+
+    // ─── /hello ───────────────────────────────────────────────────────────────
+
     private static void registerHelloCommand(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(CommandManager.literal("hello")
                 .executes(CustomCommands::executeHello));
@@ -46,15 +111,11 @@ public class CustomCommands {
         return 1;
     }
 
-    /**
-     * Command with arguments: /heal [amount]
-     * Heals the player by the specified amount (default: full health)
-     */
+    // ─── /heal ────────────────────────────────────────────────────────────────
+
     private static void registerHealCommand(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(CommandManager.literal("heal")
-                // Without arguments - full heal
                 .executes(CustomCommands::executeHealFull)
-                // With amount argument
                 .then(CommandManager.argument("amount", IntegerArgumentType.integer(1, 20))
                         .executes(CustomCommands::executeHealAmount)));
     }
@@ -64,7 +125,6 @@ public class CustomCommands {
             ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
             player.setHealth(player.getMaxHealth());
 
-            // Play healing sound
             player.getWorld().playSound(
                     null,
                     player.getX(), player.getY(), player.getZ(),
@@ -93,7 +153,6 @@ public class CustomCommands {
             float newHealth = Math.min(currentHealth + amount, player.getMaxHealth());
             player.setHealth(newHealth);
 
-            // Play healing sound
             player.getWorld().playSound(
                     null,
                     player.getX(), player.getY(), player.getZ(),
@@ -113,17 +172,12 @@ public class CustomCommands {
         }
     }
 
-    /**
-     * Command: /boost <effect> [duration]
-     * Gives the player a potion effect boost
-     * Examples: /boost speed, /boost jump 30
-     */
+    // ─── /boost ───────────────────────────────────────────────────────────────
+
     private static void registerBoostCommand(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(CommandManager.literal("boost")
                 .then(CommandManager.argument("effect", StringArgumentType.word())
-                        // Without duration - default 10 seconds
                         .executes(CustomCommands::executeBoostDefault)
-                        // With duration argument (in seconds)
                         .then(CommandManager.argument("duration", IntegerArgumentType.integer(1, 600))
                                 .executes(CustomCommands::executeBoostDuration))));
     }
@@ -141,7 +195,7 @@ public class CustomCommands {
         try {
             ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
             String effectName = StringArgumentType.getString(context, "effect").toLowerCase();
-            int durationTicks = durationSeconds * 20; // Convert seconds to ticks
+            int durationTicks = durationSeconds * 20;
 
             StatusEffectInstance effect = switch (effectName) {
                 case "speed" -> new StatusEffectInstance(StatusEffects.SPEED, durationTicks, 1);
@@ -164,7 +218,6 @@ public class CustomCommands {
 
             player.addStatusEffect(effect);
 
-            // Play effect sound
             player.getWorld().playSound(
                     null,
                     player.getX(), player.getY(), player.getZ(),
