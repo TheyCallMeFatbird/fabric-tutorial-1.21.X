@@ -19,6 +19,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.tcmfatbird.tutorialmod.network.SetTimePacket;
 
 public class TutorialMod implements ModInitializer {
     public static final String MOD_ID = "tutorialmod";
@@ -26,6 +28,14 @@ public class TutorialMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        PayloadTypeRegistry.playC2S().register(SetTimePacket.ID, SetTimePacket.CODEC);
+
+        ServerPlayNetworking.registerGlobalReceiver(SetTimePacket.ID, (payload, context) -> {
+            context.server().execute(() -> {
+                context.player().getServerWorld().setTimeOfDay(payload.time());
+            });
+        });
+
         PayloadTypeRegistry.playS2C().register(ClockTogglePacket.ID, ClockTogglePacket.CODEC);
         PayloadTypeRegistry.playS2C().register(BlockHighlightPacket.ID, BlockHighlightPacket.CODEC);
 
