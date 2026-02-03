@@ -2,6 +2,7 @@ package net.tcmfatbird.tutorialmod.feature;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
@@ -28,6 +29,15 @@ public class ChatMentions {
             String targetName = matcher.group(1);
             MinecraftServer server = sender.getServer();
 
+            Team team = server.getScoreboard().getTeam(targetName);
+            if (team != null) {
+                String error = handleTeamMention(sender, team, server);
+                if (error != null) {
+                    return error;
+                }
+                continue;
+            }
+
             ServerPlayerEntity target = server.getPlayerManager().getPlayer(targetName);
             if (target == null) continue;
 
@@ -44,6 +54,30 @@ public class ChatMentions {
 
             lastMentionTime.put(sender.getUuid(), now);
             notifyPlayer(target, sender.getName().getString());
+        }
+
+        return null;
+    }
+
+    private static String handleTeamMention(ServerPlayerEntity sender, Team team, MinecraftServer server) {
+        long now = System.currentTimeMillis();
+        Long lastTime = lastMentionTime.get(sender.getUuid());
+        if (lastTime != null && (now - lastTime) < MENTION_COOLDOWN_MS) {
+            long remainingSeconds = (MENTION_COOLDOWN_MS - (now - lastTime)) / 1000;
+            return "You can't mention again for another " + remainingSeconds + " seconds.";
+        }
+
+        boolean notified = false;
+        for (String playerName : team.getPlayerList()) {
+            ServerPlayerEntity target = server.getPlayerManager().getPlayer(playerName);
+            //if (target == null || target == sender) continue;
+            if (!CustomCommands.areMentionsEnabledFor(target)) continue;
+            notifyPlayer(target, sender.getName().getString());
+            notified = true;
+        }
+
+        if (notified) {
+            lastMentionTime.put(sender.getUuid(), now);
         }
 
         return null;
