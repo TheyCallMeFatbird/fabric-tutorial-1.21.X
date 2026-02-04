@@ -4,7 +4,8 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"ExampleMixin",
-        "SculkSpreaderMixin"
+		"SculkSpreaderMixin",
+		"SculkSpreadManagerCursorMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
