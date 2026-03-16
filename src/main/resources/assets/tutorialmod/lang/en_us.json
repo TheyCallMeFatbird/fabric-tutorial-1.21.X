@@ -28,5 +28,7 @@
   "tooltip.tutorialmod.cauliflower.tooltip": "This is delicious!",
 
   "block.tutorialmod.uranium_ore": "Uranium Ore",
-  "block.tutorialmod.uranium_deepslate_ore": "Deepslate Uranium Ore"
+  "block.tutorialmod.uranium_deepslate_ore": "Deepslate Uranium Ore",
+
+  "item.tutorialmod.geiger_counter": "Geiger Counter"
 }
