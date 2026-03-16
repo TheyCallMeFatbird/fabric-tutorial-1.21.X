@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "show_notification": true,
+  "category": "equipment",
+  "key": {
+    "#": {"item": "minecraft:iron_nugget"},
+    "X": {"item": "minecraft:redstone"},
+    "G": {"item": "minecraft:gold_ingot"}
+  },
+  "pattern": [
+    "#G#",
+    "GXG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tutorialmod:geiger_counter"
+  }
+}

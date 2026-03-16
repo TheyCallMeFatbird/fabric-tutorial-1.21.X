@@ -14,6 +14,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.tcmfatbird.tutorialmod.item.ModItems;
+import net.tcmfatbird.tutorialmod.network.RadiationLevelPacket;
+
 public class UraniumRadiationHandler {
     private static final int CHECK_RADIUS = 3;
     private static final int EXPOSURE_THRESHOLD_TICKS = 100;
@@ -30,7 +34,9 @@ public class UraniumRadiationHandler {
             UUID uuid = player.getUuid();
             int exposure = exposureTicks.getOrDefault(uuid, 0);
 
-            if (isNearUraniumOre(world, player.getBlockPos())) {
+            boolean nearUranium = isNearUraniumOre(world, player.getBlockPos());
+
+            if (nearUranium) {
                 exposure = Math.min(MAX_EXPOSURE, exposure + 1);
             } else {
                 exposure = Math.max(0, exposure - 2);
@@ -45,9 +51,40 @@ public class UraniumRadiationHandler {
             } else {
                 exposureTicks.put(uuid, exposure);
             }
+
+            // Geiger counter logic
+            boolean holdingGeiger = player.getMainHandStack().isOf(ModItems.GEIGER_COUNTER)
+                    || player.getOffHandStack().isOf(ModItems.GEIGER_COUNTER);
+
+            if (holdingGeiger) {
+                int level = getRadiationLevel(world, player.getBlockPos());
+                ServerPlayNetworking.send(player, new RadiationLevelPacket(level));
+            }
         }
 
         cleanupDisconnectedPlayers(world);
+    }
+
+    private static int getRadiationLevel(ServerWorld world, BlockPos center) {
+        if (isNearUraniumOreInRadius(world, center, 4)) return 2;
+        if (isNearUraniumOreInRadius(world, center, 10)) return 1;
+        return 0;
+    }
+
+    private static boolean isNearUraniumOreInRadius(ServerWorld world, BlockPos center, int radius) {
+        BlockPos.Mutable mutablePos = new BlockPos.Mutable();
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    mutablePos.set(center.getX() + x, center.getY() + y, center.getZ() + z);
+                    Block block = world.getBlockState(mutablePos).getBlock();
+                    if (block == ModBlocks.URANIUM_ORE || block == ModBlocks.URANIUM_DEEPSLATE_ORE) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private static boolean isNearUraniumOre(ServerWorld world, BlockPos center) {

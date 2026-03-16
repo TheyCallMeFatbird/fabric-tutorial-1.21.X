@@ -19,6 +19,7 @@ import net.tcmfatbird.tutorialmod.network.ClockTogglePacket;
 import net.tcmfatbird.tutorialmod.item.ModItemGroups;
 import net.tcmfatbird.tutorialmod.item.ModItems;
 import net.tcmfatbird.tutorialmod.network.BlockHighlightPacket;
+import net.tcmfatbird.tutorialmod.network.RadiationLevelPacket;
 import net.tcmfatbird.tutorialmod.util.ChatFormatter;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -42,6 +43,7 @@ public class TutorialMod implements ModInitializer {
     public void onInitialize() {
         MutationEnchantment.register();
         PayloadTypeRegistry.playC2S().register(SetTimePacket.ID, SetTimePacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(RadiationLevelPacket.ID, RadiationLevelPacket.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SetTimePacket.ID, (payload, context) -> {
             context.server().execute(() -> {

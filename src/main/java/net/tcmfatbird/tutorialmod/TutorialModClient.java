@@ -9,9 +9,12 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.tcmfatbird.tutorialmod.feature.BlockHighlightRenderer;
+import net.tcmfatbird.tutorialmod.feature.GeigerCounterClient;
 import net.tcmfatbird.tutorialmod.gui.ClockScreen;
+import net.tcmfatbird.tutorialmod.item.ModItems;
 import net.tcmfatbird.tutorialmod.network.BlockHighlightPacket;
 import net.tcmfatbird.tutorialmod.network.ClockTogglePacket;
+import net.tcmfatbird.tutorialmod.network.RadiationLevelPacket;
 import org.lwjgl.glfw.GLFW;
 
 public class TutorialModClient implements ClientModInitializer {
@@ -28,6 +31,12 @@ public class TutorialModClient implements ClientModInitializer {
                 GLFW.GLFW_KEY_G,
                 "key.category.tutorialmod"
         ));
+
+        ClientPlayNetworking.registerGlobalReceiver(RadiationLevelPacket.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                GeigerCounterClient.setRadiationLevel(payload.level());
+            });
+        });
 
         // --- REGISTER C2S PACKET ---
         //PayloadTypeRegistry.playC2S().register(SetTimePacket.ID, SetTimePacket.CODEC);
@@ -54,6 +63,20 @@ public class TutorialModClient implements ClientModInitializer {
 
         // --- TICK ---
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+
+            if (client.player == null) {
+                GeigerCounterClient.reset();
+            } else {
+                boolean holdingGeiger = client.player.getMainHandStack().isOf(ModItems.GEIGER_COUNTER)
+                        || client.player.getOffHandStack().isOf(ModItems.GEIGER_COUNTER);
+
+                if (holdingGeiger) {
+                    GeigerCounterClient.tick(client);
+                } else {
+                    GeigerCounterClient.reset();
+                }
+            }
+
             BlockHighlightRenderer.tick();
 
             // Open clock GUI on keypress
