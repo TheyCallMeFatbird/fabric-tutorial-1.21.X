@@ -1,6 +1,88 @@
 {
-  "parent": "minecraft:item/generated",
+  "format_version": "1.21.11",
+  "credit": "Made with Blockbench",
+  "texture_size": [32, 32],
   "textures": {
-    "layer0": "tutorialmod:item/geiger_counter"
-  }
+    "0": "tutorialmod:item/geiger_counter",
+    "particle": "tutorialmod:item/geiger_counter"
+  },
+  "elements": [
+    {
+      "from": [5, 0, 7],
+      "to": [10, 9, 9],
+      "rotation": {"angle": 0, "axis": "y", "origin": [9, 0, 7]},
+      "faces": {
+        "north": {"uv": [0, 0, 2.5, 4.5], "texture": "#0"},
+        "east": {"uv": [0, 4.5, 1, 9], "texture": "#0"},
+        "south": {"uv": [2.5, 0, 5, 4.5], "texture": "#0"},
+        "west": {"uv": [1, 4.5, 2, 9], "texture": "#0"},
+        "up": {"uv": [4.5, 5.5, 2, 4.5], "texture": "#0"},
+        "down": {"uv": [7, 4.5, 4.5, 5.5], "texture": "#0"}
+      }
+    },
+    {
+      "from": [5, 8, 7],
+      "to": [6, 11, 9],
+      "rotation": {"angle": 0, "axis": "y", "origin": [9, 0, 7]},
+      "faces": {
+        "north": {"uv": [5, 3, 5.5, 4.5], "texture": "#0"},
+        "east": {"uv": [5, 0, 6, 1.5], "texture": "#0"},
+        "south": {"uv": [2, 5.5, 2.5, 7], "texture": "#0"},
+        "west": {"uv": [5, 1.5, 6, 3], "texture": "#0"},
+        "up": {"uv": [3, 6.5, 2.5, 5.5], "texture": "#0"},
+        "down": {"uv": [3.5, 5.5, 3, 6.5], "texture": "#0"}
+      }
+    },
+    {
+      "from": [5, 11, 8],
+      "to": [6, 12, 9],
+      "rotation": {"angle": 0, "axis": "y", "origin": [9, 1, 7]},
+      "faces": {
+        "north": {"uv": [5.5, 3, 6, 3.5], "texture": "#0"},
+        "east": {"uv": [3.5, 5.5, 4, 6], "texture": "#0"},
+        "south": {"uv": [5.5, 3.5, 6, 4], "texture": "#0"},
+        "west": {"uv": [4, 5.5, 4.5, 6], "texture": "#0"},
+        "up": {"uv": [6, 4.5, 5.5, 4], "texture": "#0"},
+        "down": {"uv": [5, 5.5, 4.5, 6], "texture": "#0"}
+      }
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [12, 180, 0],
+      "translation": [0, 6.5, 1.75]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [12, 180, 0],
+      "translation": [0, 6.5, 1.75]
+    },
+    "firstperson_righthand": {
+      "rotation": [-11, 180, 2],
+      "translation": [0, 7, 0]
+    },
+    "firstperson_lefthand": {
+      "rotation": [-12, 180, 2],
+      "translation": [0, 7, 0]
+    },
+    "ground": {
+      "translation": [0, 4.75, 0]
+    },
+    "gui": {
+      "translation": [0.5, 2.25, 0]
+    },
+    "head": {
+      "translation": [0, 14.5, 0]
+    },
+    "fixed": {
+      "translation": [0.25, 3.5, 0]
+    }
+  },
+  "groups": [
+    {
+      "name": "group",
+      "origin": [9, 0, 7],
+      "color": 0,
+      "children": [0, 1, 2]
+    }
+  ]
 }
