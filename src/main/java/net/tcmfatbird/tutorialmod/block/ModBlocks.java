@@ -31,6 +31,13 @@ public class ModBlocks {
             new ExperienceDroppingBlock(UniformIntProvider.create(3, 6),
                     AbstractBlock.Settings.create().strength(4f).requiresTool().sounds(BlockSoundGroup.DEEPSLATE)));
 
+    public static final Block URANIUM_ORE = registerBlock("uranium_ore",
+            new ExperienceDroppingBlock(UniformIntProvider.create(1, 4),
+                    AbstractBlock.Settings.create().strength(4f).requiresTool()));
+    public static final Block URANIUM_DEEPSLATE_ORE = registerBlock("uranium_deepslate_ore",
+            new ExperienceDroppingBlock(UniformIntProvider.create(2, 5),
+                    AbstractBlock.Settings.create().strength(5f).requiresTool().sounds(BlockSoundGroup.DEEPSLATE)));
+
     public static final Block MAGIC_BLOCK = registerBlock("magic_block",
             new MagicBlock(AbstractBlock.Settings.create().strength(1f).requiresTool()));
 
@@ -50,6 +57,8 @@ public class ModBlocks {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(fabricItemGroupEntries ->  {
             fabricItemGroupEntries.add(ModBlocks.PINK_GARNET_BLOCK);
             fabricItemGroupEntries.add(ModBlocks.RAW_PINK_GARNET_BLOCK);
+            fabricItemGroupEntries.add(ModBlocks.URANIUM_ORE);
+            fabricItemGroupEntries.add(ModBlocks.URANIUM_DEEPSLATE_ORE);
         });
     }
 }

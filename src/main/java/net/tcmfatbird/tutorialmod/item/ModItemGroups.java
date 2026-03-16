@@ -39,6 +39,8 @@ public class ModItemGroups {
 
                         entries.add(ModBlocks.PINK_GARNET_ORE);
                         entries.add(ModBlocks.PINK_GARNET_DEEPSLATE_ORE);
+                        entries.add(ModBlocks.URANIUM_ORE);
+                        entries.add(ModBlocks.URANIUM_DEEPSLATE_ORE);
 
                         entries.add(ModBlocks.MAGIC_BLOCK);
                     }).build());

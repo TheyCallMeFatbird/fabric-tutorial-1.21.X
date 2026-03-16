@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "tutorialmod:pink_garnet_deepslate_ore"
+    "tutorialmod:pink_garnet_deepslate_ore",
+    "tutorialmod:pink_garnet_deepslate_ore",
+    "tutorialmod:uranium_deepslate_ore"
   ]
 }

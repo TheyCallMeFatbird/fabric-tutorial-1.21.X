@@ -15,6 +15,8 @@
 
   "block.tutorialmod.magic_block": "Magic Block",
 
+  "enchantment.tutorialmod.mutation": "Mutation",
+
   "itemgroup.tutorialmod.pink_garnet_items": "Pink Garnet Items",
   "itemgroup.tutorialmod.pink_garnet_blocks": "Pink Garnet Blocks",
 
@@ -23,5 +25,8 @@
   "tooltip.tutorialmod.chisel.shift_down": "This item chisels blocks into Bricks!",
   "tooltip.tutorialmod.chisel": "Press §eShift§r for more Information!",
 
-  "tooltip.tutorialmod.cauliflower.tooltip": "This is delicious!"
+  "tooltip.tutorialmod.cauliflower.tooltip": "This is delicious!",
+
+  "block.tutorialmod.uranium_ore": "Uranium Ore",
+  "block.tutorialmod.uranium_deepslate_ore": "Deepslate Uranium Ore"
 }

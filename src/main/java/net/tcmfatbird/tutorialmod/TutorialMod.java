@@ -5,10 +5,16 @@ import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Identifier;
 import net.tcmfatbird.tutorialmod.block.ModBlocks;
 import net.tcmfatbird.tutorialmod.command.CustomCommands;
+import net.tcmfatbird.tutorialmod.enchantment.MutationEnchantment;
 import net.tcmfatbird.tutorialmod.feature.BlockHighlightTracker;
 import net.tcmfatbird.tutorialmod.feature.ChatMentions;
+import net.tcmfatbird.tutorialmod.feature.UraniumRadiationHandler;
 import net.tcmfatbird.tutorialmod.network.ClockTogglePacket;
 import net.tcmfatbird.tutorialmod.item.ModItemGroups;
 import net.tcmfatbird.tutorialmod.item.ModItems;
@@ -19,15 +25,22 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+//import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.tcmfatbird.tutorialmod.network.SetTimePacket;
+import net.tcmfatbird.tutorialmod.world.ModOreGeneration;
 
 public class TutorialMod implements ModInitializer {
     public static final String MOD_ID = "tutorialmod";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
+    public static final RegistryKey<Enchantment> MUTATION = RegistryKey.of(
+            RegistryKeys.ENCHANTMENT,
+            Identifier.of(MOD_ID, "mutation")
+    );
+
     @Override
     public void onInitialize() {
+        MutationEnchantment.register();
         PayloadTypeRegistry.playC2S().register(SetTimePacket.ID, SetTimePacket.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SetTimePacket.ID, (payload, context) -> {
@@ -42,6 +55,8 @@ public class TutorialMod implements ModInitializer {
         ModItemGroups.registerItemGroups();
         ModItems.registerModItems();
         ModBlocks.registerModBlocks();
+        ModOreGeneration.register();
+        UraniumRadiationHandler.register();
         CustomCommands.register();
 
         FuelRegistry.INSTANCE.add(ModItems.STARLIGHT_ASHES, 600);
