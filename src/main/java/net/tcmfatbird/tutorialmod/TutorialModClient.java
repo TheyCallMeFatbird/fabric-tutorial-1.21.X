@@ -11,6 +11,7 @@ import net.tcmfatbird.tutorialmod.feature.BlockHighlightRenderer;
 import net.tcmfatbird.tutorialmod.feature.GeigerCounterClient;
 import net.tcmfatbird.tutorialmod.feature.GeigerHud;
 import net.tcmfatbird.tutorialmod.feature.TemporalRewindClientEffects;
+import net.tcmfatbird.tutorialmod.feature.QuantumVisionClient;
 import net.tcmfatbird.tutorialmod.gui.ClockScreen;
 import net.tcmfatbird.tutorialmod.item.ModItems;
 import net.tcmfatbird.tutorialmod.network.BlockHighlightPacket;
@@ -33,6 +34,7 @@ public class TutorialModClient implements ClientModInitializer {
     public void onInitializeClient() {
         GeigerHud.register();
         TemporalRewindClientEffects.register();
+        QuantumVisionClient.register();
 
         ClientPlayNetworking.registerGlobalReceiver(NearestUraniumPacket.ID, (payload, context) -> {
             context.client().execute(() -> {

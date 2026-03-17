@@ -16,6 +16,7 @@ import net.tcmfatbird.tutorialmod.feature.BlockHighlightTracker;
 import net.tcmfatbird.tutorialmod.feature.ChatMentions;
 import net.tcmfatbird.tutorialmod.feature.UraniumRadiationHandler;
 import net.tcmfatbird.tutorialmod.feature.TemporalRewindManager;
+import net.tcmfatbird.tutorialmod.feature.QuantumWavefunctionHandler;
 import net.tcmfatbird.tutorialmod.network.*;
 import net.tcmfatbird.tutorialmod.item.ModItemGroups;
 import net.tcmfatbird.tutorialmod.item.ModItems;
@@ -65,6 +66,7 @@ public class TutorialMod implements ModInitializer {
         ModOreGeneration.register();
         UraniumRadiationHandler.register();
         TemporalRewindManager.register();
+        QuantumWavefunctionHandler.register();
         CustomCommands.register();
 
         FuelRegistry.INSTANCE.add(ModItems.STARLIGHT_ASHES, 600);

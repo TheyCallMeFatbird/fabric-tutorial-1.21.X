@@ -1,9 +1,7 @@
 package net.tcmfatbird.tutorialmod.item;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -40,6 +38,15 @@ public class ModItems {
 
     public static final Item TEMPORAL_REWINDER = registerItem("temporal_rewinder", new Item(new Item.Settings().maxCount(1)));
 
+    public static final Item WAVEFUNCTION_GOGGLES = registerItem("wavefunction_goggles", new ArmorItem(ArmorMaterials.CHAIN, ArmorItem.Type.HELMET, new Item.Settings()) {
+        @Override
+        public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+            tooltip.add(Text.translatable("tooltip.tutorialmod.wavefunction_goggles"));
+            super.appendTooltip(stack, context, tooltip, type);
+        }
+    });
+
+
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, Identifier.of(TutorialMod.MOD_ID, name), item);
     }
@@ -52,6 +59,7 @@ public class ModItems {
             fabricItemGroupEntries.add(RAW_PINK_GARNET);
             fabricItemGroupEntries.add(GEIGER_COUNTER);
             fabricItemGroupEntries.add(TEMPORAL_REWINDER);
+            fabricItemGroupEntries.add(WAVEFUNCTION_GOGGLES);
         });
     }
 }

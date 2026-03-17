@@ -30,6 +30,7 @@ public class ModItemGroups {
 
                         entries.add(ModItems.GEIGER_COUNTER);
                         entries.add(ModItems.TEMPORAL_REWINDER);
+                        entries.add(ModItems.WAVEFUNCTION_GOGGLES);
                     }).build());
 
     public static final ItemGroup PINK_GARNET_BLOCKS_GROUP = Registry.register(Registries.ITEM_GROUP,
