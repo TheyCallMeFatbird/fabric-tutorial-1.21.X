@@ -3,9 +3,7 @@
 	"package": "net.tcmfatbird.tutorialmod.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin",
-        "SculkSpreaderMixin",
-        "SculkSpreadManagerCursorMixin"
+		"ExampleMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

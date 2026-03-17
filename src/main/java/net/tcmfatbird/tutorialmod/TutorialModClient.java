@@ -4,19 +4,21 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.tcmfatbird.tutorialmod.feature.BlockHighlightRenderer;
 import net.tcmfatbird.tutorialmod.feature.GeigerCounterClient;
 import net.tcmfatbird.tutorialmod.feature.GeigerHud;
+import net.tcmfatbird.tutorialmod.feature.TemporalRewindClientEffects;
 import net.tcmfatbird.tutorialmod.gui.ClockScreen;
 import net.tcmfatbird.tutorialmod.item.ModItems;
 import net.tcmfatbird.tutorialmod.network.BlockHighlightPacket;
 import net.tcmfatbird.tutorialmod.network.ClockTogglePacket;
 import net.tcmfatbird.tutorialmod.network.NearestUraniumPacket;
 import net.tcmfatbird.tutorialmod.network.RadiationLevelPacket;
+import net.tcmfatbird.tutorialmod.network.TemporalRewindStatePacket;
+import net.tcmfatbird.tutorialmod.network.TemporalRewindTogglePacket;
 import org.lwjgl.glfw.GLFW;
 
 public class TutorialModClient implements ClientModInitializer {
@@ -24,10 +26,13 @@ public class TutorialModClient implements ClientModInitializer {
     private boolean clockEnabled = true;
 
     private static KeyBinding clockGuiKey;
+    private static KeyBinding temporalRewindKey;
+    private boolean wasRewindPressed = false;
 
     @Override
     public void onInitializeClient() {
         GeigerHud.register();
+        TemporalRewindClientEffects.register();
 
         ClientPlayNetworking.registerGlobalReceiver(NearestUraniumPacket.ID, (payload, context) -> {
             context.client().execute(() -> {
@@ -39,6 +44,12 @@ public class TutorialModClient implements ClientModInitializer {
         clockGuiKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.tutorialmod.clockgui",
                 GLFW.GLFW_KEY_G,
+                "key.category.tutorialmod"
+        ));
+
+        temporalRewindKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.tutorialmod.temporal_rewind",
+                GLFW.GLFW_KEY_R,
                 "key.category.tutorialmod"
         ));
 
@@ -71,6 +82,10 @@ public class TutorialModClient implements ClientModInitializer {
             });
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(TemporalRewindStatePacket.ID, (payload, context) -> {
+            context.client().execute(() -> TemporalRewindClientEffects.setRewinding(payload.rewinding()));
+        });
+
         // --- TICK ---
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
@@ -88,12 +103,21 @@ public class TutorialModClient implements ClientModInitializer {
             }
 
             BlockHighlightRenderer.tick();
+            TemporalRewindClientEffects.tick(client);
 
             // Open clock GUI on keypress
             while (clockGuiKey.wasPressed()) {
                 if (client.world != null) {
                     client.setScreen(new ClockScreen());
                 }
+            }
+
+            boolean rewindPressed = temporalRewindKey.isPressed();
+            if (client.player != null && rewindPressed != wasRewindPressed) {
+                ClientPlayNetworking.send(new TemporalRewindTogglePacket(rewindPressed));
+                wasRewindPressed = rewindPressed;
+            } else if (client.player == null) {
+                wasRewindPressed = false;
             }
 
             // Clock display

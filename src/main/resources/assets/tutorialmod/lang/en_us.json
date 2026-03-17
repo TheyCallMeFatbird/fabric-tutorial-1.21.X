@@ -30,5 +30,10 @@
   "block.tutorialmod.uranium_ore": "Uranium Ore",
   "block.tutorialmod.uranium_deepslate_ore": "Deepslate Uranium Ore",
 
-  "item.tutorialmod.geiger_counter": "Geiger Counter"
+  "item.tutorialmod.geiger_counter": "Geiger Counter",
+
+  "item.tutorialmod.temporal_rewinder": "Temporal Rewinder",
+  "key.category.tutorialmod": "Tutorial Mod",
+  "key.tutorialmod.clockgui": "Open Clock GUI",
+  "key.tutorialmod.temporal_rewind": "Hold to Rewind Time"
 }

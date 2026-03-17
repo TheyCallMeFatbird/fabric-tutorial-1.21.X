@@ -15,6 +15,7 @@ import net.tcmfatbird.tutorialmod.enchantment.MutationEnchantment;
 import net.tcmfatbird.tutorialmod.feature.BlockHighlightTracker;
 import net.tcmfatbird.tutorialmod.feature.ChatMentions;
 import net.tcmfatbird.tutorialmod.feature.UraniumRadiationHandler;
+import net.tcmfatbird.tutorialmod.feature.TemporalRewindManager;
 import net.tcmfatbird.tutorialmod.network.*;
 import net.tcmfatbird.tutorialmod.item.ModItemGroups;
 import net.tcmfatbird.tutorialmod.item.ModItems;
@@ -40,14 +41,20 @@ public class TutorialMod implements ModInitializer {
     public void onInitialize() {
         MutationEnchantment.register();
         PayloadTypeRegistry.playC2S().register(SetTimePacket.ID, SetTimePacket.CODEC);
+        PayloadTypeRegistry.playC2S().register(TemporalRewindTogglePacket.ID, TemporalRewindTogglePacket.CODEC);
         PayloadTypeRegistry.playS2C().register(RadiationLevelPacket.ID, RadiationLevelPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(NearestUraniumPacket.ID, NearestUraniumPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(TemporalRewindStatePacket.ID, TemporalRewindStatePacket.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SetTimePacket.ID, (payload, context) -> {
             context.server().execute(() -> {
                 context.player().getServerWorld().setTimeOfDay(payload.time());
             });
         });
+
+        ServerPlayNetworking.registerGlobalReceiver(TemporalRewindTogglePacket.ID, (payload, context) ->
+                context.server().execute(() -> TemporalRewindManager.setRewinding(context.player(), payload.rewinding()))
+        );
 
         PayloadTypeRegistry.playS2C().register(ClockTogglePacket.ID, ClockTogglePacket.CODEC);
         PayloadTypeRegistry.playS2C().register(BlockHighlightPacket.ID, BlockHighlightPacket.CODEC);
@@ -57,6 +64,7 @@ public class TutorialMod implements ModInitializer {
         ModBlocks.registerModBlocks();
         ModOreGeneration.register();
         UraniumRadiationHandler.register();
+        TemporalRewindManager.register();
         CustomCommands.register();
 
         FuelRegistry.INSTANCE.add(ModItems.STARLIGHT_ASHES, 600);
