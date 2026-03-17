@@ -15,11 +15,9 @@ import net.tcmfatbird.tutorialmod.enchantment.MutationEnchantment;
 import net.tcmfatbird.tutorialmod.feature.BlockHighlightTracker;
 import net.tcmfatbird.tutorialmod.feature.ChatMentions;
 import net.tcmfatbird.tutorialmod.feature.UraniumRadiationHandler;
-import net.tcmfatbird.tutorialmod.network.ClockTogglePacket;
+import net.tcmfatbird.tutorialmod.network.*;
 import net.tcmfatbird.tutorialmod.item.ModItemGroups;
 import net.tcmfatbird.tutorialmod.item.ModItems;
-import net.tcmfatbird.tutorialmod.network.BlockHighlightPacket;
-import net.tcmfatbird.tutorialmod.network.RadiationLevelPacket;
 import net.tcmfatbird.tutorialmod.util.ChatFormatter;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -27,7 +25,6 @@ import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.tcmfatbird.tutorialmod.network.SetTimePacket;
 import net.tcmfatbird.tutorialmod.world.ModOreGeneration;
 
 public class TutorialMod implements ModInitializer {
@@ -44,6 +41,7 @@ public class TutorialMod implements ModInitializer {
         MutationEnchantment.register();
         PayloadTypeRegistry.playC2S().register(SetTimePacket.ID, SetTimePacket.CODEC);
         PayloadTypeRegistry.playS2C().register(RadiationLevelPacket.ID, RadiationLevelPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(NearestUraniumPacket.ID, NearestUraniumPacket.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(SetTimePacket.ID, (payload, context) -> {
             context.server().execute(() -> {

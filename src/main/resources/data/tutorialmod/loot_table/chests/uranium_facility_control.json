@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 2,
+        "max": 4
+      },
+      "entries": [
+        {"type": "minecraft:item", "name": "minecraft:diamond", "weight": 5},
+        {"type": "minecraft:item", "name": "minecraft:gold_ingot", "weight": 8},
+        {"type": "minecraft:item", "name": "tutorialmod:pink_garnet", "weight": 6},
+        {"type": "minecraft:item", "name": "tutorialmod:geiger_counter", "weight": 3},
+        {"type": "minecraft:item", "name": "minecraft:enchanted_book", "weight": 2},
+        {"type": "minecraft:item", "name": "minecraft:netherite_scrap", "weight": 1}
+      ]
+    }
+  ]
+}

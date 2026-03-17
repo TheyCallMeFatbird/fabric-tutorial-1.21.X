@@ -10,10 +10,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.tcmfatbird.tutorialmod.feature.BlockHighlightRenderer;
 import net.tcmfatbird.tutorialmod.feature.GeigerCounterClient;
+import net.tcmfatbird.tutorialmod.feature.GeigerHud;
 import net.tcmfatbird.tutorialmod.gui.ClockScreen;
 import net.tcmfatbird.tutorialmod.item.ModItems;
 import net.tcmfatbird.tutorialmod.network.BlockHighlightPacket;
 import net.tcmfatbird.tutorialmod.network.ClockTogglePacket;
+import net.tcmfatbird.tutorialmod.network.NearestUraniumPacket;
 import net.tcmfatbird.tutorialmod.network.RadiationLevelPacket;
 import org.lwjgl.glfw.GLFW;
 
@@ -25,6 +27,14 @@ public class TutorialModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        GeigerHud.register();
+
+        ClientPlayNetworking.registerGlobalReceiver(NearestUraniumPacket.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                GeigerCounterClient.setNearestDistance(payload.distance());
+            });
+        });
+
         // --- KEYBIND (no InputUtil needed, just pass the int key code directly) ---
         clockGuiKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.tutorialmod.clockgui",

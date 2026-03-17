@@ -8,6 +8,18 @@ public class GeigerCounterClient {
 
     private static int radiationLevel = 0;
     private static int tickCounter = 0;
+    private static int nearestDistance = Integer.MAX_VALUE;
+
+    public static void setNearestDistance(int distance) {
+        nearestDistance = distance;
+    }
+
+    public static int getRadiationLevel() {
+        return radiationLevel;
+    }
+    public static int getNearestDistance() {
+        return nearestDistance;
+    }
 
     // Beep every N ticks depending on level
     private static final int[] BEEP_INTERVALS = {40, 15, 4};
@@ -40,5 +52,6 @@ public class GeigerCounterClient {
     public static void reset() {
         radiationLevel = 0;
         tickCounter = 0;
+        nearestDistance = Integer.MAX_VALUE;
     }
 }

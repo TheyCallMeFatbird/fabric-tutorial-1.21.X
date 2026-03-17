@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.tcmfatbird.tutorialmod.item.ModItems;
+import net.tcmfatbird.tutorialmod.network.NearestUraniumPacket;
 import net.tcmfatbird.tutorialmod.network.RadiationLevelPacket;
 
 public class UraniumRadiationHandler {
@@ -58,11 +59,31 @@ public class UraniumRadiationHandler {
 
             if (holdingGeiger) {
                 int level = getRadiationLevel(world, player.getBlockPos());
+                int distance = getNearestUraniumDistance(world, player.getBlockPos());
                 ServerPlayNetworking.send(player, new RadiationLevelPacket(level));
+                ServerPlayNetworking.send(player, new NearestUraniumPacket(distance));
             }
         }
 
         cleanupDisconnectedPlayers(world);
+    }
+
+    private static int getNearestUraniumDistance(ServerWorld world, BlockPos center) {
+        int nearest = Integer.MAX_VALUE;
+        BlockPos.Mutable mutablePos = new BlockPos.Mutable();
+        for (int x = -10; x <= 10; x++) {
+            for (int y = -10; y <= 10; y++) {
+                for (int z = -10; z <= 10; z++) {
+                    mutablePos.set(center.getX() + x, center.getY() + y, center.getZ() + z);
+                    Block block = world.getBlockState(mutablePos).getBlock();
+                    if (block == ModBlocks.URANIUM_ORE || block == ModBlocks.URANIUM_DEEPSLATE_ORE) {
+                        int dist = (int) Math.sqrt(mutablePos.getSquaredDistance(center));
+                        if (dist < nearest) nearest = dist;
+                    }
+                }
+            }
+        }
+        return nearest;
     }
 
     private static int getRadiationLevel(ServerWorld world, BlockPos center) {

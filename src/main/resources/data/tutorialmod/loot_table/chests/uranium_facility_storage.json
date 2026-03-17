@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 3,
+        "max": 6
+      },
+      "entries": [
+        {"type": "minecraft:item", "name": "minecraft:iron_ingot", "weight": 10},
+        {"type": "minecraft:item", "name": "minecraft:coal", "weight": 10},
+        {"type": "minecraft:item", "name": "minecraft:torch", "weight": 8},
+        {"type": "minecraft:item", "name": "minecraft:bread", "weight": 8},
+        {"type": "minecraft:item", "name": "tutorialmod:raw_pink_garnet", "weight": 4},
+        {"type": "minecraft:item", "name": "tutorialmod:starlight_ashes", "weight": 3},
+        {"type": "minecraft:item", "name": "minecraft:iron_pickaxe", "weight": 3},
+        {"type": "minecraft:item", "name": "minecraft:tnt", "weight": 2}
+      ]
+    }
+  ]
+}
