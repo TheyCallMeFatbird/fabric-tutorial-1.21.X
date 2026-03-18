@@ -8,6 +8,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.tcmfatbird.tutorialmod.TutorialMod;
 import net.tcmfatbird.tutorialmod.item.custom.ChiselItem;
+import net.tcmfatbird.tutorialmod.item.custom.QuantumTunnelerItem;
 import net.tcmfatbird.tutorialmod.item.custom.RainbowDyeItem;
 import net.tcmfatbird.tutorialmod.item.custom.ThickenedInkItem;
 import net.minecraft.text.Text;
@@ -36,15 +37,7 @@ public class ModItems {
 
     public static final Item GEIGER_COUNTER = registerItem("geiger_counter", new Item(new Item.Settings()));
 
-    public static final Item TEMPORAL_REWINDER = registerItem("temporal_rewinder", new Item(new Item.Settings().maxCount(1)));
-
-    public static final Item WAVEFUNCTION_GOGGLES = registerItem("wavefunction_goggles", new ArmorItem(ArmorMaterials.CHAIN, ArmorItem.Type.HELMET, new Item.Settings()) {
-        @Override
-        public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-            tooltip.add(Text.translatable("tooltip.tutorialmod.wavefunction_goggles"));
-            super.appendTooltip(stack, context, tooltip, type);
-        }
-    });
+    public static final Item QUANTUM_TUNNELER = registerItem("quantum_tunneler", new QuantumTunnelerItem(new Item.Settings().maxDamage(16)));
 
 
     private static Item registerItem(String name, Item item) {
@@ -58,8 +51,7 @@ public class ModItems {
             fabricItemGroupEntries.add(PINK_GARNET);
             fabricItemGroupEntries.add(RAW_PINK_GARNET);
             fabricItemGroupEntries.add(GEIGER_COUNTER);
-            fabricItemGroupEntries.add(TEMPORAL_REWINDER);
-            fabricItemGroupEntries.add(WAVEFUNCTION_GOGGLES);
+            fabricItemGroupEntries.add(QUANTUM_TUNNELER);
         });
     }
 }
