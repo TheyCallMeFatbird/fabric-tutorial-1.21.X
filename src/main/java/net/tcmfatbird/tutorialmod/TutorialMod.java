@@ -16,7 +16,6 @@ import net.tcmfatbird.tutorialmod.feature.BlockHighlightTracker;
 import net.tcmfatbird.tutorialmod.feature.ChatMentions;
 import net.tcmfatbird.tutorialmod.feature.UraniumRadiationHandler;
 import net.tcmfatbird.tutorialmod.feature.TemporalRewindManager;
-import net.tcmfatbird.tutorialmod.feature.QuantumWavefunctionHandler;
 import net.tcmfatbird.tutorialmod.network.*;
 import net.tcmfatbird.tutorialmod.item.ModItemGroups;
 import net.tcmfatbird.tutorialmod.item.ModItems;
@@ -26,7 +25,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.tcmfatbird.tutorialmod.world.ModOreGeneration;
 
 public class TutorialMod implements ModInitializer {
@@ -66,7 +64,6 @@ public class TutorialMod implements ModInitializer {
         ModOreGeneration.register();
         UraniumRadiationHandler.register();
         TemporalRewindManager.register();
-        QuantumWavefunctionHandler.register();
         CustomCommands.register();
 
         FuelRegistry.INSTANCE.add(ModItems.STARLIGHT_ASHES, 600);
