@@ -7,10 +7,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.tcmfatbird.tutorialmod.TutorialMod;
-import net.tcmfatbird.tutorialmod.item.custom.ChiselItem;
-import net.tcmfatbird.tutorialmod.item.custom.QuantumTunnelerItem;
-import net.tcmfatbird.tutorialmod.item.custom.RainbowDyeItem;
-import net.tcmfatbird.tutorialmod.item.custom.ThickenedInkItem;
+import net.tcmfatbird.tutorialmod.item.custom.*;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -39,6 +36,8 @@ public class ModItems {
 
     public static final Item QUANTUM_TUNNELER = registerItem("quantum_tunneler", new QuantumTunnelerItem(new Item.Settings().maxDamage(16)));
 
+    public static final Item XP_ORB_SPHERE = registerItem("xp_orb_sphere", new XpOrbSphereItem(new Item.Settings()));
+
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, Identifier.of(TutorialMod.MOD_ID, name), item);
@@ -52,6 +51,7 @@ public class ModItems {
             fabricItemGroupEntries.add(RAW_PINK_GARNET);
             fabricItemGroupEntries.add(GEIGER_COUNTER);
             fabricItemGroupEntries.add(QUANTUM_TUNNELER);
+            fabricItemGroupEntries.add(XP_ORB_SPHERE);
         });
     }
 }

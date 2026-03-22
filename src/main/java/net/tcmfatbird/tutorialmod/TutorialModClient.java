@@ -10,7 +10,6 @@ import net.minecraft.util.Formatting;
 import net.tcmfatbird.tutorialmod.feature.BlockHighlightRenderer;
 import net.tcmfatbird.tutorialmod.feature.GeigerCounterClient;
 import net.tcmfatbird.tutorialmod.feature.GeigerHud;
-import net.tcmfatbird.tutorialmod.feature.TemporalRewindClientEffects;
 import net.tcmfatbird.tutorialmod.gui.ClockScreen;
 import net.tcmfatbird.tutorialmod.item.ModItems;
 import net.tcmfatbird.tutorialmod.network.BlockHighlightPacket;
@@ -32,7 +31,6 @@ public class TutorialModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         GeigerHud.register();
-        TemporalRewindClientEffects.register();
 
         ClientPlayNetworking.registerGlobalReceiver(NearestUraniumPacket.ID, (payload, context) -> {
             context.client().execute(() -> {
@@ -82,9 +80,6 @@ public class TutorialModClient implements ClientModInitializer {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(TemporalRewindStatePacket.ID, (payload, context) -> {
-            context.client().execute(() -> TemporalRewindClientEffects.setRewinding(payload.rewinding()));
-        });
 
         // --- TICK ---
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -103,7 +98,6 @@ public class TutorialModClient implements ClientModInitializer {
             }
 
             BlockHighlightRenderer.tick();
-            TemporalRewindClientEffects.tick(client);
 
             // Open clock GUI on keypress
             while (clockGuiKey.wasPressed()) {

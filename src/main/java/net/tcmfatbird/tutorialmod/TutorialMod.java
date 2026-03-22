@@ -15,7 +15,7 @@ import net.tcmfatbird.tutorialmod.enchantment.MutationEnchantment;
 import net.tcmfatbird.tutorialmod.feature.BlockHighlightTracker;
 import net.tcmfatbird.tutorialmod.feature.ChatMentions;
 import net.tcmfatbird.tutorialmod.feature.UraniumRadiationHandler;
-import net.tcmfatbird.tutorialmod.feature.TemporalRewindManager;
+import net.tcmfatbird.tutorialmod.item.custom.XpOrbSphereItem;
 import net.tcmfatbird.tutorialmod.network.*;
 import net.tcmfatbird.tutorialmod.item.ModItemGroups;
 import net.tcmfatbird.tutorialmod.item.ModItems;
@@ -51,9 +51,15 @@ public class TutorialMod implements ModInitializer {
             });
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(TemporalRewindTogglePacket.ID, (payload, context) ->
-                context.server().execute(() -> TemporalRewindManager.setRewinding(context.player(), payload.rewinding()))
+        PayloadTypeRegistry.playC2S().register(SpawnXpSpherePacket.ID, SpawnXpSpherePacket.CODEC);
+
+        ServerPlayNetworking.registerGlobalReceiver(SpawnXpSpherePacket.ID, (payload, context) ->
+                context.server().execute(() ->
+                        XpOrbSphereItem.spawnSphere(context.player().getServerWorld(),
+                                context.player(), payload.orbCount(), payload.radius())
+                )
         );
+
 
         PayloadTypeRegistry.playS2C().register(ClockTogglePacket.ID, ClockTogglePacket.CODEC);
         PayloadTypeRegistry.playS2C().register(BlockHighlightPacket.ID, BlockHighlightPacket.CODEC);
@@ -63,7 +69,6 @@ public class TutorialMod implements ModInitializer {
         ModBlocks.registerModBlocks();
         ModOreGeneration.register();
         UraniumRadiationHandler.register();
-        TemporalRewindManager.register();
         CustomCommands.register();
 
         FuelRegistry.INSTANCE.add(ModItems.STARLIGHT_ASHES, 600);
