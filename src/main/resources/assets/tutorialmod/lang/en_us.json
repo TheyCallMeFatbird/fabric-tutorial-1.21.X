@@ -37,5 +37,6 @@
   "key.tutorialmod.clockgui": "Open Clock GUI",
   "key.tutorialmod.temporal_rewind": "Hold to Rewind Time",
 
-  "item.tutorialmod.quantum_tunneler": "Quantum Tunneler"
+  "item.tutorialmod.quantum_tunneler": "Quantum Tunneler",
+  "tooltip.tutorialmod.starlight_ashes": "Call down a starfall, launch yourself skyward, and smite nearby hostiles."
 }

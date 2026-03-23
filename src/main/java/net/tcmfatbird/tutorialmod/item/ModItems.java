@@ -30,7 +30,7 @@ public class ModItems {
         }
     });
 
-    public static final Item STARLIGHT_ASHES = registerItem("starlight_ashes", new Item(new Item.Settings()));
+    public static final Item STARLIGHT_ASHES = registerItem("starlight_ashes", new StarlightAshesItem(new Item.Settings()));
 
     public static final Item GEIGER_COUNTER = registerItem("geiger_counter", new Item(new Item.Settings()));
 
@@ -52,6 +52,7 @@ public class ModItems {
             fabricItemGroupEntries.add(GEIGER_COUNTER);
             fabricItemGroupEntries.add(QUANTUM_TUNNELER);
             fabricItemGroupEntries.add(XP_ORB_SPHERE);
+            fabricItemGroupEntries.add(STARLIGHT_ASHES);
         });
     }
 }
